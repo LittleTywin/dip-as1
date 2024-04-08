@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 
 # set the filepath to the image file
-filename = "img1.jpg"
+filename = "input_img.png"
 
 # read the image into a PIL entity
 img = Image.open(fp=filename)
