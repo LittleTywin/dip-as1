@@ -60,3 +60,15 @@ def perform_global_hist_equalization(
         equalized_img[img_array==i] = eq_tr[i]
     
     return equalized_img
+
+def calculate_eq_transformations_of_regions(
+        img_array,
+        region_len_h,
+        region_len_w
+) -> dict:
+    eq_transformation_of_regions = {}
+    for i in range(img_array.shape[0]):
+        for j in range(img_array.shape[1]):
+            region_matrix = img_array[i*region_len_h:(i+1)*region_len_h,j*region_len_w:(j+1)*region_len_w]
+            eq_transformation_of_regions[(i,j)] = get_equalization_transform_of_img(region_matrix)
+    return eq_transformation_of_regions
