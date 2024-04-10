@@ -24,10 +24,7 @@ bw_img = img.convert("L")
 img_array = np.array(bw_img)
 
 equalized_img_array = ahe.perform_global_hist_equalization(img_array)
-# plot.figure
-# plot.title("Equalized image")
-# plot.imshow(equalized_img_array,cmap="gray")
-# plot.show()
+
 
 fig,ax = plot.subplots(2,2)
 ax[0,0].axis('off')
