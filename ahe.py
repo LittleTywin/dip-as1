@@ -1,6 +1,14 @@
 import numpy as np
 #from matplotlib import pyplot as plot
 
+def get_hist(img_array):
+    L=256
+    n_pixels = img_array.size
+    hist = np.zeros(L,dtype=np.float32)
+    for k in range(L):
+        hist[k] = np.sum(img_array==k)/n_pixels
+    return hist
+
 def get_equalization_transform_of_img(
         img_array: np.ndarray,
 ) -> np.ndarray:
@@ -20,9 +28,9 @@ def get_equalization_transform_of_img(
     L = 256
     n_pixels = img_array.size
     #calculate histogram
-    hist = np.zeros(L,dtype=np.float32)
-    v = np.zeros(L,dtype=np.float32)
-    equalization_transform = np.zeros(L,dtype=np.uint32)
+    hist = np.zeros(L,dtype=np.float64)
+    v = np.zeros(L,dtype=np.float64)
+    equalization_transform = np.zeros(L,dtype=np.uint8)
     for k in range(L):
         hist[k] = np.sum(img_array==k)/n_pixels
         v[k] = v[k-1] + hist[k]
