@@ -67,13 +67,20 @@ def calculate_eq_transformations_of_regions(
         region_len_w:int
 ) -> dict:
     eq_transformation_of_regions = {}
-    for i in range(img_array.shape[0]):
-        for j in range(img_array.shape[1]):
+    for i in range(int(img_array.shape[0]/region_len_h)):
+        for j in range(int(img_array.shape[1]/region_len_w)):
             region_matrix = img_array[i*region_len_h:(i+1)*region_len_h,j*region_len_w:(j+1)*region_len_w]
             eq_transformation_of_regions[(i,j)] = get_equalization_transform_of_img(region_matrix)
     return eq_transformation_of_regions
 
 def perform_adaptive_hist_equalization(
+        img_array:np.ndarray,
+        region_len_h:int,
+        region_len_w:int,
+) -> np.ndarray:
+    pass
+
+def perform_adaptive_hist_equalization_no_interpolation(
         img_array:np.ndarray,
         region_len_h:int,
         region_len_w:int,
