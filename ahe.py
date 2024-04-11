@@ -85,4 +85,15 @@ def perform_adaptive_hist_equalization_no_interpolation(
         region_len_h:int,
         region_len_w:int,
 ) -> np.ndarray:
-    pass
+    eq_tr_of_regions = calculate_eq_transformations_of_regions(img_array, region_len_h, region_len_w)
+    equalized_img_array = np.zeros(img_array.shape)
+    for i in range(int(img_array.shape[0]/region_len_h)):
+        for j in range(int(img_array.shape[1]/region_len_w)):
+            equalized_img_part = np.zeros((region_len_h,region_len_w))
+            equalized_img_array_part = np.zeros((region_len_h,region_len_w))
+            for v in range(256):
+                img_array_part = img_array[i*region_len_h:(i+1)*region_len_h,j*region_len_w:(j+1)*region_len_w]
+                equalized_img_array_part[img_array_part==v] = eq_tr_of_regions[(i,j)][v]
+            equalized_img_array[i*region_len_h:(i+1)*region_len_h,j*region_len_w:(j+1)*region_len_w] = equalized_img_array_part
+    return equalized_img_array
+            
