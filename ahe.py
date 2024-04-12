@@ -1,5 +1,21 @@
 import numpy as np
 
+def get_histogram_of_img(
+        img_array:np.ndarray,
+) -> np.ndarray:
+    """
+    Calculates and returns the histogram of a grayscale image.
+    
+    Args:
+    img_array (numpy.ndarray): A 2d, numpy.uint8 array representing the input
+        image.
+    
+    Returns:
+    hist (numpy.ndarray): A 1d, numpy.float32 array representing the histogram of
+    the input image.
+
+    """
+
 def get_equalization_transform_of_img(
         img_array:np.ndarray,
 ) -> np.ndarray:
@@ -20,5 +36,6 @@ def get_equalization_transform_of_img(
     Returns:
     equalization_transform (numpy.ndarray): A numpy 1darray, dtype=numpyuint8
     of size L
+    
     """
     pass
