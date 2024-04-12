@@ -16,6 +16,18 @@ def get_histogram_of_img(
 
     """
 
+    L=256
+    hist = np.zeros(L,dtype=np.uint32)
+    if not isinstance(img_array,np.ndarray):
+        raise TypeError(f"img_array type should be 'numpy.ndarray',currently: {type(img_array)} ")
+    if not img_array.dtype == np.uint8:
+        raise ValueError(f"img_array dtype should be 'numpy.uint8', currently: 'numpy.{img_array.dtype}'")
+    hist = np.zeros(L)
+
+    for i in range(L):
+        hist[i] = np.sum(img_array==i)
+    return hist
+
 def get_equalization_transform_of_img(
         img_array:np.ndarray,
 ) -> np.ndarray:
@@ -36,6 +48,6 @@ def get_equalization_transform_of_img(
     Returns:
     equalization_transform (numpy.ndarray): A numpy 1darray, dtype=numpyuint8
     of size L
-    
+
     """
     pass
