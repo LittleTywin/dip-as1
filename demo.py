@@ -52,13 +52,20 @@ ax2[1].plot(equalized_img_cdf*np.max(equalized_img_hist), 'red', label="cdf")
 ax2[1].legend()
 
 ##
-ahe_img = ahe.perform_adaptive_hist_equalization_no_interpolation(
+ghe_cr = ahe.perform_adaptive_hist_equalization_no_interpolation(
     img_array,
     region_len_h,
     region_len_w
 )
-plot.figure(3)
-plot.imshow(ahe_img,cmap="gray")
+ghe_cr_hist, ghe_cr_cdf = ghe.get_histogram_of_img(ghe_cr)
+
+fig3,ax3 = plot.subplots(1,2,figsize = (9.5,3.3))
+fig3.suptitle("Global Histogram Equalization per Contectual Region")
+ax3[0].axis("off")
+ax3[0].imshow(ghe_cr, cmap="gray")
+ax3[1].bar(np.array(range(ghe.L)), ghe_cr_hist, width=1, label="pdf")
+ax3[1].plot(ghe_cr_cdf*np.max(ghe_cr_hist), 'red', label="cdf")
+ax3[1].legend()
 ##
 
 plot.show()
