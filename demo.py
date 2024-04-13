@@ -68,4 +68,18 @@ ax3[1].plot(ghe_cr_cdf*np.max(ghe_cr_hist), 'red', label="cdf")
 ax3[1].legend()
 ##
 
+ahe_img = ahe.perform_adaptive_hist_equalization(
+    img_array,
+    region_len_h,
+    region_len_w,
+)
+ahe_img_hist, ahe_img_cdf = ghe.get_histogram_of_img(ahe_img)
+fig4,ax4 = plot.subplots(1,2,figsize = (9.5,3.3))
+fig4.suptitle("Adaptive Histogram Equalization")
+ax4[0].axis("off")
+ax4[0].imshow(ahe_img, cmap="gray")
+ax4[1].bar(np.array(range(ghe.L)), ahe_img_hist, width=1, label="pdf")
+ax4[1].plot(ahe_img_cdf*np.max(ahe_img_hist), 'red', label="cdf")
+ax4[1].legend()
+
 plot.show()
