@@ -1,4 +1,5 @@
 import numpy as np
+import global_hist_eq as ghe
 def calculate_eq_transformations_of_regions(
         img_array: np.ndarray,
         region_len_h: int,
@@ -25,9 +26,15 @@ def calculate_eq_transformations_of_regions(
     
     region_to_eq_transform = {}
     im_shape = img_array.shape
+    
+    #part is left out if division has remainder
     region_h_max = int(im_shape[0]/region_len_h)
     region_w_max = int(im_shape[1]/region_len_w)
     for region_ind_h in range(region_h_max):
         for region_ind_w in range(region_w_max):
-            pass
+            region_part = img_array[
+                region_ind_h:(region_ind_h+1)*region_len_h,
+                region_ind_w:(region_ind_w+1)*region_len_w,
+            ]
+            region_to_eq_transform[(region_ind_h,region_ind_w)]=ghe.get_equalization_transform_of_img(region_part)
     return region_to_eq_transform
