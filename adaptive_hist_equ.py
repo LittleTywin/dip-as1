@@ -1,8 +1,8 @@
 import numpy as np
 def calculate_eq_transformations_of_regions(
         img_array: np.ndarray,
-        region_len_w: int,
         region_len_h: int,
+        region_len_w: int,
 ) -> dict:
     """
     This function splits the input image in (region_len_h x region_len_w)
@@ -23,3 +23,11 @@ def calculate_eq_transformations_of_regions(
     equalization transform pairs. 
     """
     
+    region_to_eq_transform = {}
+    im_shape = img_array.shape
+    region_h_max = int(im_shape[0]/region_len_h)
+    region_w_max = int(im_shape[1]/region_len_w)
+    for region_ind_h in range(region_h_max):
+        for region_ind_w in range(region_w_max):
+            pass
+    return region_to_eq_transform
