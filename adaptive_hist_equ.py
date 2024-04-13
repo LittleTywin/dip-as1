@@ -1,8 +1,8 @@
 import numpy as np
 def calculate_eq_transformations_of_regions(
         img_array: np.ndarray,
-        region_len_h: int,
         region_len_w: int,
+        region_len_h: int,
 ) -> dict:
     """
     This function splits the input image in (region_len_h x region_len_w)
@@ -22,4 +22,4 @@ def calculate_eq_transformations_of_regions(
     region_to_eq_transform(dict[Tuple,numpy.ndarray]): Contectual region - 
     equalization transform pairs. 
     """
-    pass
+    
