@@ -83,5 +83,5 @@ def perform_adaptive_hist_equalization(
     TODO docstring
     """
 
-    ret_array = np.zeros(img_array.shape)
+    ret_array = np.zeros(img_array.shape, dtype=np.uint8)
     return ret_array
