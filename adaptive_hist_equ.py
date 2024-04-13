@@ -38,3 +38,22 @@ def calculate_eq_transformations_of_regions(
             ]
             region_to_eq_transform[(region_ind_h,region_ind_w)]=ghe.get_equalization_transform_of_img(region_part)
     return region_to_eq_transform
+
+def perform_adaptive_hist_equalization_no_interpolation(
+        img_array: np.ndarray,
+        region_len_h: int,
+        region_len_w: int,
+) -> np.ndarray :
+    """
+    Splits the input image in (region_len_h x region_len_w) regions and performs
+    global histogram equalization in each of them seperatly.
+
+    Args:
+    img_array(numpy.ndarray): 2d uint8 matrix representing input image
+    region_len_h(int): height of contectual region
+    region_len_w(int): width of contectual region
+
+    Returns:
+    ret_img(numpy.ndarray): 2d uint8 matrix representing output image
+    """
+    pass
