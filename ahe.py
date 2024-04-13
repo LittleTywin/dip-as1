@@ -57,6 +57,6 @@ def get_equalization_transform_of_img(
     hist = get_histogram_of_img(img_array)
     for i in range(L):
         cdf[i] = cdf[i-1]+hist[i]
-        eq_transform[i] = np.round((cdf[i]-cdf(0))/(1-cdf[0])*(L-1))
+        eq_transform[i] = (cdf[i]-cdf[0])/(1-cdf[0])*(L-1)
 
     return eq_transform
