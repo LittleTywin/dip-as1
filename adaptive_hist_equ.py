@@ -73,3 +73,15 @@ def perform_adaptive_hist_equalization_no_interpolation(
             y*region_len_w:(y+1)*region_len_w,
         ] = equalized_img_part
     return ret_img
+
+def perform_adaptive_hist_equalization(
+        img_array: np.ndarray,
+        region_len_h: int,
+        region_len_w: int,
+) -> np.ndarray:
+    """
+    TODO docstring
+    """
+
+    ret_array = np.zeros(img_array.shape)
+    return ret_array
