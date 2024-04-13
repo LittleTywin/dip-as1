@@ -74,6 +74,53 @@ def perform_adaptive_hist_equalization_no_interpolation(
         ] = equalized_img_part
     return ret_img
 
+def perform_global_hist_equalization_on_border_regions(
+        img_array:np.ndarray,
+        region_len_h: int,
+        region_len_w: int,
+) -> np.ndarray:
+    ret_array = np.zeros(img_array.shape, dtype=np.uint8)
+
+    #perform border regions hist equalization
+    region_index_0_max = int(img_array.shape[0]/region_len_h)
+    region_index_1_max = int(img_array.shape[1]/region_len_w)
+    for i in range(region_index_0_max):
+        img_part1 = img_array[
+            i*region_len_h:(i+1)*region_len_h,
+            0:region_len_w
+        ]
+        ret_array[
+            i*region_len_h:(i+1)*region_len_h,
+            0:region_len_w
+        ] = ghe.perform_global_hist_equalization(img_part1)
+        img_part2 = img_array[
+            i*region_len_h:(i+1)*region_len_h,
+            (region_index_1_max-1)*region_len_w:(region_index_1_max)*region_len_w,
+        ]
+        ret_array[
+            i*region_len_h:(i+1)*region_len_h,
+            (region_index_1_max-1)*region_len_w:(region_index_1_max)*region_len_w,
+        ] = ghe.perform_global_hist_equalization(img_part2)
+    for i in range(1,region_index_1_max-1):
+        img_part1 = img_array[
+            0:region_len_h,
+            i*region_len_w:(i+1)*region_len_w,
+        ]
+        ret_array[
+            0:region_len_h,
+            i*region_len_w:(i+1)*region_len_w,
+        ] = ghe.perform_global_hist_equalization(img_part1)
+        img_part2 = img_array[
+            (region_index_0_max-1)*region_len_h:(region_index_0_max)*region_len_h,
+            i*region_len_w:(i+1)*region_len_w,
+        ]
+        ret_array[
+            (region_index_0_max-1)*region_len_h:(region_index_0_max)*region_len_h,
+            i*region_len_w:(i+1)*region_len_w,
+        ] = ghe.perform_global_hist_equalization(img_part2)
+
+    return ret_array
+
 def perform_adaptive_hist_equalization(
         img_array: np.ndarray,
         region_len_h: int,
@@ -82,6 +129,18 @@ def perform_adaptive_hist_equalization(
     """
     TODO docstring
     """
+    eq_transform_of_regions = calculate_eq_transformations_of_regions(
+        img_array,
+        region_len_h,
+        region_len_w,
+    )
 
     ret_array = np.zeros(img_array.shape, dtype=np.uint8)
+
+    ret_array = perform_global_hist_equalization_on_border_regions(
+        img_array,
+        region_len_h,
+        region_len_w
+    )
+
     return ret_array
