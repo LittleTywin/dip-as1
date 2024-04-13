@@ -137,10 +137,16 @@ def perform_adaptive_hist_equalization(
 
     ret_array = np.zeros(img_array.shape, dtype=np.uint8)
 
-    ret_array = perform_global_hist_equalization_on_border_regions(
-        img_array,
-        region_len_h,
-        region_len_w
-    )
+    contectual_regions_coords = {}
+    contectual_centers_coords = {}
+    for region in eq_transform_of_regions:
+        (i,j) = region
+        contectual_regions_coords[region] = (i*region_len_h,j*region_len_w)
+        contectual_centers_coords[region] = ((i+.5)*region_len_h,(j+.5)*region_len_w)
+    
+    for i in range(ret_array.shape[0]):
+        for j in range(ret_array.shape[1]):
+            pass
+
 
     return ret_array
