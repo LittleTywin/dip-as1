@@ -2,19 +2,29 @@ from PIL import Image
 from matplotlib import pyplot as plot
 import numpy as np
 import global_hist_eq as ghe
+import adaptive_hist_equ as ahe
+
+region_len_h = 72
+region_len_w = 48
+
 
 # set the filepath to the image file
 filename = "input_img.png"
 
 # read the image into a PIL entity
 img = Image.open(fp=filename)
-img.show()
 
 # keep only the Luminance component of the image
 bw_img = img.convert("L")
 
 # obtain the underlying np array
-img_array = np.array(bw_img)
+img_array_tmp = np.array(bw_img)
+
+#clip image in order to have equally sized contectual regions
+img_array = img_array_tmp[
+    0:int(img_array_tmp.shape[0]/region_len_h)*region_len_h,
+    0:int(img_array_tmp.shape[1]/region_len_w)*region_len_w,
+]
 
 #calculate and present original image along its histogram and cdf
 img_array_hist, img_array_cdf = ghe.get_histogram_of_img(img_array)
@@ -40,5 +50,15 @@ ax2[0].imshow(equalized_img_array, cmap="gray")
 ax2[1].bar(np.array(range(ghe.L)), equalized_img_hist, width=1, label="pdf")
 ax2[1].plot(equalized_img_cdf*np.max(equalized_img_hist), 'red', label="cdf")
 ax2[1].legend()
+
+##
+ahe_img = ahe.perform_adaptive_hist_equalization_no_interpolation(
+    img_array,
+    region_len_h,
+    region_len_w
+)
+plot.figure(3)
+plot.imshow(ahe_img,cmap="gray")
+##
 
 plot.show()
