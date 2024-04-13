@@ -8,6 +8,7 @@ filename = "input_img.png"
 
 # read the image into a PIL entity
 img = Image.open(fp=filename)
+img.show()
 
 # keep only the Luminance component of the image
 bw_img = img.convert("L")
@@ -37,7 +38,7 @@ fig2.suptitle("Global Histogram Equalization")
 ax2[0].axis("off")
 ax2[0].imshow(equalized_img_array, cmap="gray")
 ax2[1].bar(np.array(range(ahe.L)), equalized_img_hist, width=1, label="pdf")
-ax2[1].plot(img_array_cdf*np.max(equalized_img_hist), 'red', label="cdf")
+ax2[1].plot(equalized_img_cdf*np.max(equalized_img_hist), 'red', label="cdf")
 ax2[1].legend()
 
 plot.show()
