@@ -25,7 +25,7 @@ def get_histogram_of_img(
     hist = np.zeros(L)
 
     for i in range(L):
-        hist[i] = np.sum(img_array==i)
+        hist[i] = np.sum(img_array==i)/img_array.size
     return hist
 
 def get_equalization_transform_of_img(
