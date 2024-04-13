@@ -4,7 +4,7 @@ import numpy as np
 import global_hist_eq as ghe
 import adaptive_hist_equ as ahe
 
-region_len_h = 72
+region_len_h = 36
 region_len_w = 48
 
 
@@ -82,4 +82,5 @@ ax4[1].bar(np.array(range(ghe.L)), ahe_img_hist, width=1, label="pdf")
 ax4[1].plot(ahe_img_cdf*np.max(ahe_img_hist), 'red', label="cdf")
 ax4[1].legend()
 
-plot.show()
+plot.show(block=False)
+wait = input("Press Enter to exit.")
