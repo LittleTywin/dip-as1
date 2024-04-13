@@ -4,9 +4,10 @@ L = 256
 
 def get_histogram_of_img(
         img_array:np.ndarray,
-) -> np.ndarray:
+) -> tuple:
     """
-    Calculates and returns the histogram of a grayscale image.
+    Calculates and returns the histogram(probability density function) and cdf
+    (cumulative density fuction) of a grayscale image.
     
     Args:
     img_array (numpy.ndarray): A 2d, numpy.uint8 array representing the input
@@ -15,19 +16,22 @@ def get_histogram_of_img(
     Returns:
     hist (numpy.ndarray): A 1d, numpy.float32 array representing the histogram of
     the input image.
-
+    cdf (numpy.ndarray): A 1d, numpy.float32 array representing the cumulative
+    density function of the histogram.
     """
 
-    hist = np.zeros(L,dtype=np.uint32)
     if not isinstance(img_array,np.ndarray):
         raise TypeError(f"img_array type should be 'numpy.ndarray',currently: {type(img_array)} ")
     if not img_array.dtype == np.uint8:
         raise ValueError(f"img_array dtype should be 'numpy.uint8', currently: 'numpy.{img_array.dtype}'")
-    hist = np.zeros(L)
 
+    hist = np.zeros(L,dtype=np.float32)
+    cdf = np.zeros(L,dtype=np.float32)
+    
     for i in range(L):
         hist[i] = np.sum(img_array==i)/img_array.size
-    return hist
+        cdf[i] = cdf[i-1]+hist[i]
+    return hist,cdf
 
 def get_equalization_transform_of_img(
         img_array:np.ndarray,
@@ -54,9 +58,8 @@ def get_equalization_transform_of_img(
 
     cdf = np.zeros(L,dtype=np.float32) #cumulative density function
     eq_transform = np.zeros(L,dtype=np.int32)
-    hist = get_histogram_of_img(img_array)
+    hist,cdf = get_histogram_of_img(img_array)
     for i in range(L):
-        cdf[i] = cdf[i-1]+hist[i]
         eq_transform[i] = (cdf[i]-cdf[0])/(1-cdf[0])*(L-1)
 
     return eq_transform
