@@ -1,5 +1,7 @@
 import numpy as np
 
+L = 256
+
 def get_histogram_of_img(
         img_array:np.ndarray,
 ) -> np.ndarray:
@@ -16,7 +18,6 @@ def get_histogram_of_img(
 
     """
 
-    L=256
     hist = np.zeros(L,dtype=np.uint32)
     if not isinstance(img_array,np.ndarray):
         raise TypeError(f"img_array type should be 'numpy.ndarray',currently: {type(img_array)} ")
@@ -51,7 +52,6 @@ def get_equalization_transform_of_img(
 
     """
 
-    L=256
     cdf = np.zeros(L,dtype=np.float32) #cumulative density function
     eq_transform = np.zeros(L,dtype=np.int32)
     hist = get_histogram_of_img(img_array)
@@ -60,3 +60,26 @@ def get_equalization_transform_of_img(
         eq_transform[i] = (cdf[i]-cdf[0])/(1-cdf[0])*(L-1)
 
     return eq_transform
+
+def perform_global_hist_equalization(
+        img_array:np.ndarray,
+) -> np.ndarray:
+    """
+    Calculates the equalization_transformation with
+    'get_equalization_transform_of_img(...)', applies it on 'img_array' and
+    returns the result.
+
+    Args:
+    img_array(numpy.ndarray): 2d uint8 numpy matrix representing a grayscale image
+
+    Returns:
+    equalized_img(numpy.ndarray): 2d uint8 numpy matrix representing the input image
+    after a global histogram equalization is applied
+
+    """
+    eq_transform = get_equalization_transform_of_img(img_array)
+    equalized_img = np.ndarray(img_array.shape, dtype=np.uint8)
+    for i in range(L):
+        equalized_img[img_array==i] = eq_transform[i]
+    
+    return equalized_img
