@@ -46,8 +46,17 @@ def get_equalization_transform_of_img(
     an 8-bit grayscale image.
 
     Returns:
-    equalization_transform (numpy.ndarray): A numpy 1darray, dtype=numpyuint8
+    eq_transform (numpy.ndarray): A numpy 1darray, dtype=numpyuint8
     of size L
 
     """
-    pass
+
+    L=256
+    cdf = np.zeros(L,dtype=np.float32) #cumulative density function
+    eq_transform = np.zeros(L,dtype=np.int32)
+    hist = get_histogram_of_img(img_array)
+    for i in range(L):
+        cdf[i] = cdf[i-1]+hist[i]
+        eq_transform[i] = np.round((cdf[i]-cdf(0))/(1-cdf[0])*(L-1))
+
+    return eq_transform
