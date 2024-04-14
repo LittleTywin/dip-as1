@@ -59,17 +59,16 @@ def perform_adaptive_hist_equalization_no_interpolation(
         region_len_w,
     )
     ret_img = np.zeros(img_array.shape,dtype=np.uint8)
-    for x in range(region_transforms.shape[0]):
-        for y in range(region_transforms.shape[1]):
-            img_part = img_array[
-                x*region_len_h:(x+1)*region_len_h,
-                y*region_len_w:(y+1)*region_len_w,
-            ]
-            equalized_img_part = ghe.perform_global_hist_equalization(img_part)
-            ret_img[
-                x*region_len_h:(x+1)*region_len_h,
-                y*region_len_w:(y+1)*region_len_w,
-            ] = equalized_img_part
+    for x,y in region_transforms:
+        img_part = img_array[
+            x*region_len_h:(x+1)*region_len_h,
+            y*region_len_w:(y+1)*region_len_w,
+        ]
+        equalized_img_part = ghe.perform_global_hist_equalization(img_part)
+        ret_img[
+            x*region_len_h:(x+1)*region_len_h,
+            y*region_len_w:(y+1)*region_len_w,
+        ] = equalized_img_part
     return ret_img
 
 """
