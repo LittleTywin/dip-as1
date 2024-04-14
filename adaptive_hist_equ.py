@@ -4,15 +4,11 @@ def calculate_eq_transformations_of_regions(
         img_array: np.ndarray,
         region_len_h: int,
         region_len_w: int,
-) -> dict:
+) -> np.ndarray:
     """
     This function splits the input image in (region_len_h x region_len_w)
     rectangles (contectual regions). Then calculates and returns the
     equalization transform for each one.
-
-    Contectual regions are represented as a
-    tuple with the coordinates of the region vertice closest to the origin of
-    the axes(0,0)
 
     Args:
     img_array(numpy.ndarray): 2d uint8 matrix representing input image
@@ -20,23 +16,24 @@ def calculate_eq_transformations_of_regions(
     region_len_w(int): width of contectual region
 
     Returns:
-    region_to_eq_transform(dict[Tuple,numpy.ndarray]): Contectual region - 
-    equalization transform pairs. 
+    region_to_eq_transform(numpy.ndarray): 3d uint32 numpy array. Axes 0 and 1
+    represent a contectual region and axis 2 represents the equalization
+    transformation of the region. 
     """
     
-    region_to_eq_transform = {}
     im_shape = img_array.shape
     
     #part is left out if division has remainder
     region_h_max = int(im_shape[0]/region_len_h)
     region_w_max = int(im_shape[1]/region_len_w)
+    region_to_eq_transform = np.zeros((region_h_max,region_w_max,ghe.L))
     for region_ind_h in range(region_h_max):
         for region_ind_w in range(region_w_max):
             region_part = img_array[
                 region_ind_h:(region_ind_h+1)*region_len_h,
                 region_ind_w:(region_ind_w+1)*region_len_w,
             ]
-            region_to_eq_transform[(region_ind_h,region_ind_w)]=ghe.get_equalization_transform_of_img(region_part)
+            region_to_eq_transform[region_ind_h,region_ind_w]=ghe.get_equalization_transform_of_img(region_part)
     return region_to_eq_transform
 
 def perform_adaptive_hist_equalization_no_interpolation(
@@ -62,16 +59,17 @@ def perform_adaptive_hist_equalization_no_interpolation(
         region_len_w,
     )
     ret_img = np.zeros(img_array.shape,dtype=np.uint8)
-    for x,y in region_transforms:
-        img_part = img_array[
-            x*region_len_h:(x+1)*region_len_h,
-            y*region_len_w:(y+1)*region_len_w,
-        ]
-        equalized_img_part = ghe.perform_global_hist_equalization(img_part)
-        ret_img[
-            x*region_len_h:(x+1)*region_len_h,
-            y*region_len_w:(y+1)*region_len_w,
-        ] = equalized_img_part
+    for x in range(region_transforms.shape[0]):
+        for y in range(region_transforms.shape[1]):
+            img_part = img_array[
+                x*region_len_h:(x+1)*region_len_h,
+                y*region_len_w:(y+1)*region_len_w,
+            ]
+            equalized_img_part = ghe.perform_global_hist_equalization(img_part)
+            ret_img[
+                x*region_len_h:(x+1)*region_len_h,
+                y*region_len_w:(y+1)*region_len_w,
+            ] = equalized_img_part
     return ret_img
 
 def perform_global_hist_equalization_on_border_regions(
@@ -137,16 +135,6 @@ def perform_adaptive_hist_equalization(
 
     ret_array = np.zeros(img_array.shape, dtype=np.uint8)
 
-    contectual_regions_coords = {}
-    contectual_centers_coords = {}
-    for region in eq_transform_of_regions:
-        (i,j) = region
-        contectual_regions_coords[region] = (i*region_len_h,j*region_len_w)
-        contectual_centers_coords[region] = ((i+.5)*region_len_h,(j+.5)*region_len_w)
-    
-    for i in range(ret_array.shape[0]):
-        for j in range(ret_array.shape[1]):
-            pass
 
 
     return ret_array
