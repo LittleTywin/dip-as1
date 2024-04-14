@@ -16,9 +16,9 @@ def calculate_eq_transformations_of_regions(
     region_len_w(int): width of contectual region
 
     Returns:
-    region_to_eq_transform(numpy.ndarray): 3d uint32 numpy array. Axes 0 and 1
-    represent a contectual region and axis 2 represents the equalization
-    transformation of the region. 
+    region_to_eq_transform(dict[Tuple,np.ndarray]): A dict with keys of tuples
+    representing contectual regions and values the equalization transform of the
+    region.
     """
     
     im_shape = img_array.shape
@@ -26,14 +26,14 @@ def calculate_eq_transformations_of_regions(
     #part is left out if division has remainder
     region_h_max = int(im_shape[0]/region_len_h)
     region_w_max = int(im_shape[1]/region_len_w)
-    region_to_eq_transform = np.zeros((region_h_max,region_w_max,ghe.L))
+    region_to_eq_transform = {}
     for region_ind_h in range(region_h_max):
         for region_ind_w in range(region_w_max):
             region_part = img_array[
                 region_ind_h:(region_ind_h+1)*region_len_h,
                 region_ind_w:(region_ind_w+1)*region_len_w,
             ]
-            region_to_eq_transform[region_ind_h,region_ind_w]=ghe.get_equalization_transform_of_img(region_part)
+            region_to_eq_transform[(region_ind_h,region_ind_w)]=ghe.get_equalization_transform_of_img(region_part)
     return region_to_eq_transform
 
 def perform_adaptive_hist_equalization_no_interpolation(
