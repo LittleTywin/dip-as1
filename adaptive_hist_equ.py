@@ -72,6 +72,7 @@ def perform_adaptive_hist_equalization_no_interpolation(
             ] = equalized_img_part
     return ret_img
 
+"""
 def perform_global_hist_equalization_on_border_regions(
         img_array:np.ndarray,
         region_len_h: int,
@@ -118,7 +119,7 @@ def perform_global_hist_equalization_on_border_regions(
         ] = ghe.perform_global_hist_equalization(img_part2)
 
     return ret_array
-
+"""
 def perform_adaptive_hist_equalization(
         img_array: np.ndarray,
         region_len_h: int,
