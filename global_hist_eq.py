@@ -8,12 +8,12 @@ def get_histogram_cdf_of_img(
     """
     Calculates histogram and cumulative density function of input image.
     """
-    hist = np.zeros(L,dtype=np.float32)
+    hist = np.zeros(L,dtype=np.int32)
     cdf = np.zeros(L,dtype=np.float32)
     img_size = img_array.size
     for i in range(L):
-        hist[i] = np.sum(img_array==i)/img_size
-        cdf[i] = cdf[i-1]+hist[i]
+        hist[i] = np.sum(img_array==i)
+        cdf[i] = cdf[i-1]+hist[i]/img_size
     
     return hist,cdf
 
@@ -31,7 +31,7 @@ def get_equalization_transform_of_img(
     """
     equalization_transform = np.zeros(L, dtype=np.uint8)
     _,cdf = get_histogram_cdf_of_img(img_array)
-    for i in L:
+    for i in range(L):
         equalization_transform[i] = round((cdf[i]-cdf[0])/(1-cdf[0])*(L-1))
 
     return equalization_transform
@@ -42,6 +42,6 @@ def perform_global_hist_equalization(
     ret_img_array = np.zeros(img_array.shape,dtype=np.uint8)
     equalization_transform = get_equalization_transform_of_img(img_array)
     for i in range(L):
-        ret_img_array[img_array==L] = equalization_transform[i]
+        ret_img_array[img_array==i] = equalization_transform[i]
     
     return ret_img_array
