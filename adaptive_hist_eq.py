@@ -96,4 +96,5 @@ def perform_adaptive_hist_equalization(
     histogram equalization algorithm on the input image.
     """
     equalized_img = np.zeros(img_array.shape)
+    equalized_img = np.random.randint(0,256,img_array.shape)
     return equalized_img
