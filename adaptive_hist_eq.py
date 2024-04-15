@@ -85,7 +85,7 @@ def perform_adaptive_hist_equalization(
     adaptive histogram equalization with bilinear interpolation.
 
     Args:
-    img_array(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8 
+    img_array(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8
         representing the input 8-bit grayscale image.
     region_len_h(int): The height of the contectual region.
     region_len_w(int): The width of the contectual region.
@@ -95,3 +95,5 @@ def perform_adaptive_hist_equalization(
     representing the grayscale, 8-bit image produced after applying the global
     histogram equalization algorithm on the input image.
     """
+    equalized_img = np.zeros(img_array.shape)
+    return equalized_img
