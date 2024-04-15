@@ -2,8 +2,11 @@ from PIL import Image
 from matplotlib import pyplot as plot
 import numpy as np
 import global_hist_eq as ghe
+import adaptive_hist_eq as ahe
 
 L = ghe.L
+region_len_h = ahe.region_len_h
+region_len_w = ahe.region_len_w
 figsize = (9.6,3.3)
 
 # set the filepath to the image file
