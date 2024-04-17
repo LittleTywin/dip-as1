@@ -50,12 +50,12 @@ ax1[1].set_ylabel("Samples (x1000)")
 ax11twinx.set_ylabel("Cumulative Density Function")
 
 #global histogram equalization per region
-ahe_img_array = ahe.perform_adaptive_hist_equalization_no_interp(
+ghe_per_region_img_array = ahe.perform_adaptive_hist_equalization_no_interp(
     img_array,region_len_h,region_len_w)
-hist,cdf = ghe.get_histogram_cdf_of_img(ahe_img_array)
+hist,cdf = ghe.get_histogram_cdf_of_img(ghe_per_region_img_array)
 fig2,ax2=plot.subplots(1,2,figsize=figsize)
 fig2.suptitle("Global Histogram Equalization Per Region")
-ax2[0].imshow(ahe_img_array,cmap="gray")
+ax2[0].imshow(ghe_per_region_img_array,cmap="gray")
 ax2[0].axis("off")
 ax2[1].bar(range(L),hist/1000,width=1,label="hist")
 ax21twinx=ax2[1].twinx()
@@ -65,5 +65,22 @@ lines2,labels2 = ax21twinx.get_legend_handles_labels()
 ax2[1].legend(lines+lines2,labels+labels2,loc=0)
 ax2[1].set_ylabel("Samples (x1000)")
 ax21twinx.set_ylabel("Cummulative Density Function")
+
+#adaptive histogram equalization
+ahe_img_array = ahe.perform_adaptive_hist_equalization(
+    img_array,region_len_h,region_len_w)
+hist,cdf = ghe.get_histogram_cdf_of_img(ahe_img_array)
+fig3,ax3=plot.subplots(1,2,figsize=figsize)
+fig3.suptitle("Adaptive Histogram Equalization")
+ax3[0].imshow(ahe_img_array,cmap="gray")
+ax3[0].axis("off")
+ax3[1].bar(range(L),hist/1000,width=1,label="hist")
+ax31twinx=ax3[1].twinx()
+ax31twinx.plot(cdf,label="cdf",color='r')
+lines,labels = ax3[1].get_legend_handles_labels()
+lines2,labels2 = ax31twinx.get_legend_handles_labels()
+ax3[1].legend(lines+lines2,labels+labels2,loc=0)
+ax3[1].set_ylabel("Samples (x1000)")
+ax31twinx.set_ylabel("Cummulative Density Function")
 
 plot.show()
