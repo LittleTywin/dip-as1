@@ -15,7 +15,8 @@ def get_region_pixel_indices_of_image(
     region_pixel_h_inds_start = region[0]*region_len_h
     region_pixel_h_inds_end = np.clip(
         (region[0]+1)*region_len_h,
-        a_max=img_array.shape[0]
+        a_max=img_array.shape[0],
+        a_min=0
     )
     region_pixel_h_inds = range(
         region_pixel_h_inds_start,region_pixel_h_inds_end
@@ -23,10 +24,11 @@ def get_region_pixel_indices_of_image(
     region_pixel_w_inds_start = region[1]*region_len_w
     region_pixel_w_inds_end = np.clip(
         (region[1]+1)*region_len_w,
-        a_max=img_array.shape[1]
+        a_max=img_array.shape[1],
+        a_min=0
     )
     region_pixel_w_inds = range(
-        region_pixel_w_inds_end,region_pixel_w_inds_end
+        region_pixel_w_inds_start,region_pixel_w_inds_end
     )
     return region_pixel_h_inds,region_pixel_w_inds
 
@@ -95,6 +97,15 @@ def perform_adaptive_hist_equalization(
     representing the grayscale, 8-bit image produced after applying the global
     histogram equalization algorithm on the input image.
     """
-    equalized_img = np.zeros(img_array.shape)
-    equalized_img = np.random.randint(0,256,img_array.shape)
+
+    equalized_img = np.zeros(img_array.shape, dtype=np.uint8)
+    region_to_eq_transform = calculate_eq_transformations_of_regions(
+        img_array,region_len_h,region_len_w)
+    img_height,img_width = img_array.shape
+    for h in range(img_height):
+        for w in range(img_width):
+            region = (int(h/region_len_h),int(w/region_len_w))
+            equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
+
+    #equalized_img = np.random.randint(0,256,img_array.shape)
     return equalized_img
