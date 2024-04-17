@@ -11,15 +11,12 @@ def get_region_pixel_indices_of_image(
         region_len_h:int,
         region_len_w:int,
         region:Tuple[int,int]
-) -> Tuple[range,range]:
+) -> np.s_:
     region_pixel_h_inds_start = region[0]*region_len_h
     region_pixel_h_inds_end = np.clip(
         (region[0]+1)*region_len_h,
         a_max=img_array.shape[0],
         a_min=0
-    )
-    region_pixel_h_inds = range(
-        region_pixel_h_inds_start,region_pixel_h_inds_end
     )
     region_pixel_w_inds_start = region[1]*region_len_w
     region_pixel_w_inds_end = np.clip(
@@ -27,10 +24,12 @@ def get_region_pixel_indices_of_image(
         a_max=img_array.shape[1],
         a_min=0
     )
-    region_pixel_w_inds = range(
-        region_pixel_w_inds_start,region_pixel_w_inds_end
-    )
-    return region_pixel_h_inds,region_pixel_w_inds
+    part_slice = np.s_[
+        region_pixel_h_inds_start:region_pixel_h_inds_end,
+        region_pixel_w_inds_start:region_pixel_w_inds_end
+    ]
+
+    return part_slice
 
 def calculate_eq_transformations_of_regions(
         img_array: np.ndarray,
@@ -63,13 +62,13 @@ def calculate_eq_transformations_of_regions(
     for region_h_ind in range(region_h_ind_max):
         for region_w_ind in range(region_w_ind_max):
             region = region_h_ind,region_w_ind
-            part_pixel_indices = get_region_pixel_indices_of_image(
+            part_pixel_slice = get_region_pixel_indices_of_image(
                 img_array,
                 region_len_h,
                 region_len_w,
                 region,
             )
-            img_array_part = img_array[part_pixel_indices]
+            img_array_part = img_array[part_pixel_slice]
             
 
             region_to_eq_transform[region] = ghe.get_equalization_transform_of_img(
