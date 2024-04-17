@@ -106,3 +106,34 @@ def perform_adaptive_hist_equalization_no_interp(
             region = (int(h/region_len_h),int(w/region_len_w))
             equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
     return equalized_img
+
+def perform_adaptive_hist_equalization(
+        img_array: np.ndarray,
+        region_len_h:int,
+        region_len_w:int,
+) -> np.ndarray:
+    """
+    Accepts an input image and the size of the contectual region and performs
+    adaptive histogram equalization.
+
+    Args:
+    img_array(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8
+        representing the input 8-bit grayscale image.
+    region_len_h(int): The height of the contectual region.
+    region_len_w(int): The width of the contectual region.
+
+    Returns:
+    equalized_img(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8
+    representing the grayscale, 8-bit image produced after applying the
+    histogram equalization algorithm on the input image.
+    """
+
+    equalized_img = np.zeros(img_array.shape, dtype=np.uint8)
+    region_to_eq_transform = calculate_eq_transformations_of_regions(
+        img_array,region_len_h,region_len_w)
+    img_height,img_width = img_array.shape
+    for h in range(img_height):
+        for w in range(img_width):
+            region = (int(h/region_len_h),int(w/region_len_w))
+            equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
+    return equalized_img
