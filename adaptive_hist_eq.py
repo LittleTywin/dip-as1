@@ -131,9 +131,20 @@ def perform_adaptive_hist_equalization(
     equalized_img = np.zeros(img_array.shape, dtype=np.uint8)
     region_to_eq_transform = calculate_eq_transformations_of_regions(
         img_array,region_len_h,region_len_w)
+    contectual_centers = {}
+    for region in region_to_eq_transform.keys():
+        contectual_centers[region] = (region[0]+.5,region[1]+.5)
     img_height,img_width = img_array.shape
+    n_region_height = int(img_height / region_len_h)
+    n_region_width = int(img_width / region_len_w)
+    center00 = (int(region_len_h/2),int(region_len_w/2))
+    inner_height = range(center00[0],center00[0]+(n_region_height-1)*region_len_h)
+    inner_width = range(center00[1],center00[1]+(n_region_width-1)*region_len_w)
     for h in range(img_height):
         for w in range(img_width):
-            region = (int(h/region_len_h),int(w/region_len_w))
-            equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
+            if h in inner_height and w in inner_width :
+                pass
+            else:
+                region = (int(h/region_len_h),int(w/region_len_w))
+                equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
     return equalized_img
