@@ -3,8 +3,8 @@ from typing import Dict, Tuple
 import math
 import global_hist_eq as ghe
 
-region_len_h = 36
-region_len_w = 48
+region_len_h = 72
+region_len_w = 96
 
 def get_region_pixel_indices_of_image(
         img_array: np.ndarray,
@@ -131,9 +131,9 @@ def perform_adaptive_hist_equalization(
     equalized_img = np.zeros(img_array.shape, dtype=np.uint8)
     region_to_eq_transform = calculate_eq_transformations_of_regions(
         img_array,region_len_h,region_len_w)
-    contectual_centers = {}
-    for region in region_to_eq_transform.keys():
-        contectual_centers[region] = (region[0]+.5,region[1]+.5)
+    # contectual_centers = {}
+    # for region in region_to_eq_transform.keys():
+    #     contectual_centers[region] = (region[0]+.5,region[1]+.5)
     img_height,img_width = img_array.shape
     n_region_height = int(img_height / region_len_h)
     n_region_width = int(img_width / region_len_w)
@@ -143,7 +143,56 @@ def perform_adaptive_hist_equalization(
     for h in range(img_height):
         for w in range(img_width):
             if h in inner_height and w in inner_width :
-                pass
+                frac_h, int_h = math.modf(h/region_len_h)
+                int_h = int(int_h)
+                frac_w, int_w = math.modf(w/region_len_w)
+                int_w = int(int_w)
+                region = (int_h,int_w)
+                surounding_regions = {}
+                if frac_h >= .5:
+                    if frac_w >= .5:
+                        surounding_regions = {
+                            'mm':region,
+                            'mp':(region[0],region[1]+1),
+                            'pm':(region[0]+1,region[1]),
+                            'pp':(region[0]+1,region[1]+1),
+                        }
+                    else:
+                        surounding_regions = {
+                            'mm':(region[0],region[1]-1),
+                            'mp':region,
+                            'pm':(region[0]+1,region[1]-1),
+                            'pp':(region[0]+1,region[1]),
+                        }
+                else:
+                    if frac_w >= .5:
+                        surounding_regions = {
+                            'mm':(region[0]-1, region[1]),
+                            'mp':(region[0]-1,region[1]+1),
+                            'pm':region,
+                            'pp':(region[0],region[1]+1),
+                        }
+                    else:
+                        surounding_regions = {
+                            'mm':(region[0]-1,region[1]-1),
+                            'mp':(region[0]-1,region[1]),
+                            'pm':(region[0],region[1]-1),
+                            'pp':region,
+                        }
+                #calculate interpolated value
+                hm,wm = surounding_regions['mm']
+                hm = (hm+0.5) * region_len_h
+                hp = hm + region_len_h
+                wm = (wm+0.5) * region_len_w
+                wp = wm+ region_len_w
+                a = (w-wm)/(wp-wm)
+                b = (h-hm)/(hp-hm)
+                pixel_value = img_array[h,w]
+                y = (1-a)*(1-b)*(region_to_eq_transform[surounding_regions['mm']][pixel_value])\
+                    +(1-a)*b*region_to_eq_transform[surounding_regions['pm']][pixel_value]\
+                    +a*(1-b)*region_to_eq_transform[surounding_regions['mp']][pixel_value]\
+                    +a*b*region_to_eq_transform[surounding_regions['pp']][pixel_value]
+                equalized_img[h,w] = y
             else:
                 region = (int(h/region_len_h),int(w/region_len_w))
                 equalized_img[h,w] = region_to_eq_transform[region][img_array[h,w]]
