@@ -104,4 +104,4 @@ ax3[1].set_ylabel("Samples (x1000)")
 ax31twinx.set_ylabel("Cummulative Density Function")
 fig3.savefig("output/ahe.png")
 
-plot.show()
+#plot.show()
