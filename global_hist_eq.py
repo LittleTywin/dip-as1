@@ -1,14 +1,25 @@
 import numpy as np
+from typing import Tuple
 
 L=256
 
 def get_histogram_cdf_of_img(
         img_array: np.ndarray,
-)-> tuple:
+)-> Tuple[np.ndarray,np.ndarray]:
     """
     Calculates histogram and cumulative density function of input image.
+    
+    Args:
+    img_array(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8
+        representing an 8-bit grayscale imag
+        
+    Returns:
+    hist(numpy.ndarray): A numpy array with ndim=1, length=L, dtype=numpy.uint8
+        representing the histogram of img_array
+    cdf(numpy.ndarray): A numpy array with ndim=1, length=L, dtype=numpy.float32
+        representing the cumulative density function of img_array
     """
-    hist = np.zeros(L,dtype=np.int32)
+    hist = np.zeros(L,dtype=np.uint32)
     cdf = np.zeros(L,dtype=np.float32)
     img_size = img_array.size
     for i in range(L):
