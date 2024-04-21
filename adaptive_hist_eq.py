@@ -12,6 +12,22 @@ def get_region_pixel_indices_of_image(
         region_len_w:int,
         region:Tuple[int,int]
 ) -> np.s_:
+    """
+    Accepts a 2d array representing an image, the region size and the indices of
+    a particular region. Then calculates and returns the array slice that gives
+    the indices of the selected region.
+
+    Args:
+    img_array(numpy.ndarray): A numpy array with ndim=2, dtype=numpy.uint8 
+        representing a grayscale image.
+    region_len_h(int): Region height (dim=0)
+    region_len_w(int): Region width (dim=1)
+    region(Tuple[int,int]): The region of which we need the array slice
+
+    Returns:
+        part_slice(numpy.s_): The slice of the array corresponding to the
+            selected region
+    """
     region_pixel_h_inds_start = region[0]*region_len_h
     region_pixel_h_inds_end = np.clip(
         (region[0]+1)*region_len_h,
