@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 import math
 import global_hist_eq as ghe
 
-region_len_h = 36
+region_len_h = 72
 region_len_w = 48
 
 def get_region_pixel_indices_of_image(
